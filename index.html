@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>SPHERE TALK EVENT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* Layout: 地球儀を主役にした左右2分割のヒーロー。以降は左に見出し、右に内容の2カラム。トークだけ濃色のパネルで地球儀を再登場させる */
+:root {
+  --bg: #EDF0EF;
+  --surface: #E0E7E6;
+  --fg: #0C1A24;
+  --muted: #4A5C67;
+  --line: #B7C4C8;
+  --accent: #D9780A;
+  --accent-ink: #94490A;
+  --globe: #0F3B52;
+  --band: #0B2A3A;
+  --band-fg: #E7EFF0;
+  --band-muted: #9DB4BE;
+  --band-line: rgba(231, 239, 240, .24);
+  --band-accent: #F2A33A;
+  --f-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --f-head: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --f-body: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #081720; --surface: #0E2330; --fg: #E7EFF0; --muted: #93A8B2;
+    --line: #223C4B; --accent: #F2A33A; --accent-ink: #F2A33A; --globe: #7DBEDD;
+    --band: #123347;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #081720; --surface: #0E2330; --fg: #E7EFF0; --muted: #93A8B2;
+  --line: #223C4B; --accent: #F2A33A; --accent-ink: #F2A33A; --globe: #7DBEDD;
+  --band: #123347;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.85;
+  padding-inline: clamp(16px, 4vw, 48px);
+  padding-block: 0 56px;
+}
+.wrap { max-width: 1080px; margin-inline: auto; }
+h1, h2, h3, p, dl, dd { margin: 0; }
+
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px 24px;
+  padding-block: 12px; background: var(--bg); border-bottom: 1px solid var(--line);
+  font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; color: var(--muted);
+}
+.topbar nav { display: flex; gap: 4px; }
+.topbar nav a {
+  font-family: var(--f-body); font-size: 13px; font-weight: 500; letter-spacing: .04em;
+  color: var(--muted); text-decoration: none; padding: 6px 12px; border-bottom: 2px solid transparent;
+}
+.topbar nav a:hover { color: var(--fg); }
+.topbar nav a[aria-current="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+section[id] { scroll-margin-top: 64px; }
+h2, h3, .lede, .intro { font-feature-settings: "palt"; }
+
+/* hero */
+.hero {
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  gap: 32px 48px; align-items: center; padding-block: 48px 40px;
+}
+.eyebrow {
+  font-family: var(--f-mono); font-size: 12px; letter-spacing: .14em; color: var(--accent-ink);
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+}
+.eyebrow::before { content: ""; width: 32px; height: 2px; background: var(--accent); }
+h1 {
+  font-family: var(--f-display); font-weight: 800; font-size: clamp(2.8rem, 9vw, 6.2rem);
+  line-height: .92; letter-spacing: -.025em; text-transform: uppercase;
+}
+h1 span { display: block; }
+h1 .talk { color: var(--globe); }
+.lede {
+  font-family: var(--f-head); font-weight: 500; font-size: clamp(1.1rem, 2.3vw, 1.45rem);
+  line-height: 1.7; margin-top: 28px; max-width: 28em; text-wrap: balance;
+}
+.globe-box { width: 100%; max-width: 500px; aspect-ratio: 1; justify-self: center; }
+.globe-box canvas { display: block; width: 100%; height: 100%; }
+
+.facts {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  border-top: 2px solid var(--fg); margin-bottom: 8px;
+}
+.fact { padding: 20px 20px 22px 0; min-width: 0; }
+.fact + .fact { padding-left: 20px; border-left: 1px solid var(--line); }
+.fact dt { font-family: var(--f-mono); font-size: 11px; letter-spacing: .14em; color: var(--muted); }
+.fact dd { font-family: var(--f-display); font-weight: 800; font-size: clamp(1.7rem, 3.4vw, 2.3rem); line-height: 1.15; margin-top: 6px; font-variant-numeric: tabular-nums; }
+.fact dd small { display: block; font-family: var(--f-body); font-weight: 500; font-size: 13px; color: var(--muted); margin-top: 2px; letter-spacing: 0; }
+
+/* section frame: 左に見出し、右に内容 */
+.sec {
+  display: grid; grid-template-columns: minmax(150px, 220px) minmax(0, 1fr);
+  gap: 28px 56px; padding-top: 96px; align-items: start;
+}
+.sec-head { position: sticky; top: 84px; }
+.label {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  font-family: var(--f-mono); font-size: 12px; letter-spacing: .16em; color: var(--accent-ink);
+}
+.label::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+h2 {
+  font-family: var(--f-head); font-weight: 700; font-size: clamp(1.6rem, 3vw, 2.1rem);
+  line-height: 1.4; text-wrap: balance;
+}
+.sec-head p { margin-top: 14px; font-size: 14px; line-height: 1.8; color: var(--muted); }
+
+/* overview */
+.ruler { margin-bottom: 36px; }
+.ruler-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: var(--f-mono); font-size: 12px; letter-spacing: .14em; color: var(--accent-ink);
+  margin-bottom: 10px;
+}
+.ruler-head b { font-family: var(--f-display); font-weight: 800; letter-spacing: 0; font-size: 1.5rem; color: var(--fg); }
+.ruler-bar {
+  display: grid; grid-template-columns: repeat(6, 1fr); height: 30px;
+  border-bottom: 3px solid var(--accent); border-right: 1px solid var(--muted);
+}
+.ruler-bar i { border-left: 1px solid var(--muted); align-self: end; height: 50%; }
+.ruler-bar i:nth-child(odd) { height: 100%; }
+.ruler-labels {
+  position: relative; display: grid; grid-template-columns: repeat(3, 1fr);
+  margin-top: 8px; font-family: var(--f-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums;
+}
+.ruler-labels .end { position: absolute; right: 0; top: 0; }
+
+.spec { border-top: 2px solid var(--fg); }
+.spec > div {
+  display: grid; grid-template-columns: minmax(96px, 150px) minmax(0, 1fr);
+  gap: 6px 24px; padding-block: 18px; border-bottom: 1px solid var(--line); align-items: baseline;
+}
+.spec dt { font-weight: 700; color: var(--muted); font-size: 14px; }
+.spec dd { font-weight: 500; font-size: 1.1rem; }
+.spec dd em { font-style: normal; color: var(--muted); font-size: 14px; display: inline-block; margin-left: .5em; }
+.spec .big dd { font-family: var(--f-head); font-weight: 700; font-size: 1.4rem; }
+
+/* speakers */
+.speakers { display: grid; gap: 14px; }
+.person {
+  display: grid; grid-template-columns: 250px minmax(0, 1fr); align-items: stretch;
+  border: 1px solid var(--line); border-radius: 4px; overflow: hidden; min-width: 0;
+}
+.person.flip { grid-template-columns: minmax(0, 1fr) 250px; }
+.person.flip .photo { order: 2; }
+.photo { position: relative; margin: 0; min-width: 0; min-height: 250px; background: var(--surface); }
+.portrait {
+  position: absolute; inset: 0; display: block; width: 100%; height: 100%;
+  object-fit: cover; object-position: center 30%;
+}
+.photo::after {
+  content: ""; position: absolute; inset: 12px; pointer-events: none;
+  --m: rgba(255, 255, 255, .9);
+  background:
+    linear-gradient(var(--m), var(--m)) 0 0 / 16px 1.5px no-repeat,
+    linear-gradient(var(--m), var(--m)) 0 0 / 1.5px 16px no-repeat,
+    linear-gradient(var(--m), var(--m)) 100% 0 / 16px 1.5px no-repeat,
+    linear-gradient(var(--m), var(--m)) 100% 0 / 1.5px 16px no-repeat,
+    linear-gradient(var(--m), var(--m)) 0 100% / 16px 1.5px no-repeat,
+    linear-gradient(var(--m), var(--m)) 0 100% / 1.5px 16px no-repeat,
+    linear-gradient(var(--m), var(--m)) 100% 100% / 16px 1.5px no-repeat,
+    linear-gradient(var(--m), var(--m)) 100% 100% / 1.5px 16px no-repeat;
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.btn {
+  font: inherit; font-weight: 700; font-size: 14px; line-height: 1; letter-spacing: .02em;
+  display: inline-flex; align-items: center; padding: 14px 20px; cursor: pointer;
+  border: 1.5px solid var(--fg); border-radius: 2px; background: transparent; color: var(--fg); text-decoration: none;
+}
+.btn.primary { background: var(--fg); color: var(--bg); }
+.btn:hover { background: var(--accent); border-color: var(--accent); color: #0C1A24; }
+.copybox {
+  display: block; width: 100%; margin-top: 14px; min-height: 9em; resize: vertical;
+  font: inherit; font-size: 14px; line-height: 1.7; padding: 12px; border-radius: 2px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--fg);
+}
+.copynote { margin-top: 10px; font-size: 13px; color: var(--muted); }
+.person .txt { min-width: 0; align-self: center; padding: clamp(22px, 3.4vw, 36px); }
+.dialogue { display: flex; align-items: center; gap: 14px; color: var(--accent-ink); }
+.dialogue::before, .dialogue::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.dialogue span { font-family: var(--f-mono); font-size: 11px; letter-spacing: .24em; }
+.person .view {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: .14em; color: var(--accent-ink);
+  border: 1px solid var(--line); border-radius: 999px; padding: 2px 12px;
+}
+.person .view::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.person h3 { font-family: var(--f-head); font-weight: 700; font-size: clamp(1.7rem, 3.4vw, 2.2rem); line-height: 1.25; }
+.person .en { font-family: var(--f-mono); font-size: 12px; letter-spacing: .1em; color: var(--muted); margin-top: 2px; }
+.person .role { margin-top: 14px; font-weight: 700; font-size: 14px; line-height: 1.6; color: var(--accent-ink); }
+.person .bio { margin-top: 8px; color: var(--muted); font-size: 15px; line-height: 1.8; }
+
+/* talk */
+.band-sec { padding-top: 96px; }
+.band {
+  position: relative; overflow: hidden; background: var(--band); color: var(--band-fg);
+  border-radius: 4px; padding: clamp(28px, 6vw, 72px);
+}
+.band canvas {
+  position: absolute; right: -9%; top: 50%; width: min(560px, 62%); aspect-ratio: 1;
+  transform: translateY(-50%); pointer-events: none;
+}
+.band-inner { position: relative; z-index: 1; max-width: 700px; }
+.band .label { color: var(--band-accent); }
+.band .label::before { background: var(--band-accent); }
+.band h2 { font-size: clamp(1.9rem, 5vw, 3.3rem); line-height: 1.35; margin-top: 6px; }
+.band .intro { font-family: var(--f-head); font-weight: 500; font-size: 1.2rem; line-height: 1.8; margin-top: 28px; }
+.qs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 36px; border-top: 1px solid var(--band-line); }
+.q { padding: 20px 24px 0 0; }
+.q + .q { padding-left: 24px; border-left: 1px solid var(--band-line); }
+.q small { display: block; font-family: var(--f-mono); font-size: 11px; letter-spacing: .16em; color: var(--band-accent); margin-bottom: 6px; }
+.q p { font-weight: 500; line-height: 1.8; }
+.band .close { margin-top: 32px; color: var(--band-muted); }
+
+/* exhibition */
+.exhibit { background: var(--surface); border-radius: 4px; border-top: 3px solid var(--globe); padding: clamp(24px, 4vw, 40px); display: grid; gap: 28px; }
+.exhibit h3 { font-family: var(--f-head); font-weight: 700; font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.4; text-wrap: balance; }
+.exhibit .text { display: grid; gap: 6px; margin-top: 12px; }
+.where { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px 32px; }
+.where div { border-top: 1px solid var(--muted); padding-top: 12px; }
+.where dt { font-family: var(--f-mono); font-size: 11px; letter-spacing: .14em; color: var(--muted); }
+.where dd { font-family: var(--f-head); font-weight: 700; font-size: 1.5rem; line-height: 1.4; margin-top: 2px; }
+
+/* footer */
+footer { margin-top: 104px; padding-top: 28px; border-top: 2px solid var(--fg); display: grid; gap: 20px; }
+.foot-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 32px; }
+.wordmark { font-family: var(--f-display); font-weight: 800; font-size: clamp(1.6rem, 4.5vw, 2.6rem); letter-spacing: -.01em; text-transform: uppercase; line-height: 1.1; }
+.foot-top span { font-family: var(--f-mono); font-size: 12px; letter-spacing: .1em; color: var(--muted); }
+.foot-body { display: flex; flex-wrap: wrap; gap: 4px 28px; color: var(--muted); font-size: 14px; }
+.foot-body b { color: var(--fg); font-weight: 700; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+@media (max-width: 860px) {
+  .sec { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-top: 72px; }
+  .sec-head { position: static; }
+  .band-sec { padding-top: 72px; }
+}
+@media (max-width: 760px) {
+  .hero { grid-template-columns: minmax(0, 1fr); padding-block: 32px 24px; }
+  .globe-box { max-width: 380px; order: -1; }
+  .fact + .fact { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); }
+  .fact { padding-right: 0; }
+  .spec > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .spec dd em { margin-left: 0; display: block; }
+  .band canvas { width: 90%; right: -32%; top: 62%; }
+  .qs { grid-template-columns: minmax(0, 1fr); }
+  .q + .q { padding-left: 0; border-left: 0; border-top: 1px solid var(--band-line); margin-top: 20px; }
+  .q { padding-right: 0; }
+}
+@media (max-width: 560px) {
+  .person, .person.flip { grid-template-columns: minmax(0, 1fr); }
+  .person.flip .photo { order: 0; }
+  .photo { min-height: 0; aspect-ratio: 4 / 3; }
+  .portrait { object-position: center 25%; }
+  .topbar .tb-title { display: none; }
+  .topbar nav { width: 100%; justify-content: space-between; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <span class="tb-title">京都芸術大学 学園祭関連企画</span>
+    <nav aria-label="ページ内の移動">
+      <a href="#overview">概要</a><a href="#speakers">登壇者</a><a href="#talk">トーク</a><a href="#exhibition">展示</a>
+    </nav>
+  </div>
+
+  <header class="hero">
+    <div>
+      <p class="eyebrow">TALK &amp; EXHIBITION</p>
+      <h1><span>Sphere</span><span class="talk">Talk Event</span></h1>
+      <p class="lede">地球を可視化する技術は、私たちの世界の見方をどう変えるのか。</p>
+    </div>
+    <div class="globe-box" aria-hidden="true"><canvas id="globe"></canvas></div>
+  </header>
+
+  <dl class="facts">
+    <div class="fact"><dt>DATE</dt><dd>10/30<small>2026年10月30日（金）</small></dd></div>
+    <div class="fact"><dt>TIME</dt><dd>13:00–14:30<small>90分</small></dd></div>
+    <div class="fact"><dt>ENTRY</dt><dd>参加無料<small>予約不要</small></dd></div>
+  </dl>
+
+  <section class="sec" id="overview">
+    <div class="sec-head">
+      <div class="label">OVERVIEW</div>
+      <h2>開催概要</h2>
+    </div>
+    <div>
+      <div class="ruler" role="img" aria-label="13時から14時30分までの90分間">
+        <div class="ruler-head"><span>TALK</span><b>90 MIN</b></div>
+        <div class="ruler-bar"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="ruler-labels"><span>13:00</span><span>13:30</span><span>14:00</span><span class="end">14:30</span></div>
+      </div>
+      <dl class="spec">
+        <div><dt>イベント名</dt><dd>SPHERE TALK EVENT</dd></div>
+        <div class="big"><dt>開催日</dt><dd>2026年10月30日（金）</dd></div>
+        <div class="big"><dt>開催時間</dt><dd>13:00〜14:30（90分）</dd></div>
+        <div><dt>会場</dt><dd>京都芸術大学　カフェテリア横</dd></div>
+        <div><dt>開催形式</dt><dd>トークイベント・対談</dd></div>
+        <div><dt>登壇者</dt><dd>竹村眞一・小笠原治</dd></div>
+        <div><dt>開催企画</dt><dd>京都芸術大学 学園祭関連企画</dd></div>
+        <div><dt>参加費</dt><dd>無料</dd></div>
+        <div><dt>参加方法</dt><dd>予約不要</dd></div>
+      </dl>
+      <div class="actions">
+        <a class="btn primary" id="cal" href="https://calendar.google.com/calendar/render?action=TEMPLATE" target="_blank" rel="noopener">Googleカレンダーに追加</a>
+        <button class="btn" type="button" id="copy">開催情報をコピー</button>
+      </div>
+      <div id="copyfallback" hidden>
+        <p class="copynote">自動でコピーできませんでした。下の文面を選択してコピーしてください。</p>
+        <textarea class="copybox" id="copytext" readonly aria-label="開催情報"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="speakers">
+    <div class="sec-head">
+      <div class="label">SPEAKERS</div>
+      <h2>登壇者</h2>
+      <p>文化人類学とテクノロジー。ふたつの視点が向き合う対談です。</p>
+    </div>
+    <div class="speakers">
+      <article class="person">
+        <figure class="photo"><img class="portrait" src="img/takemura.jpg" alt="竹村眞一" width="420" height="420" loading="lazy"></figure>
+        <div class="txt">
+          <span class="view">文化人類学の視点</span>
+          <h3>竹村 眞一</h3>
+          <p class="en">Shinichi Takemura</p>
+          <p class="role">文化人類学者／SPHERE 企画主宰</p>
+          <p class="bio">地球環境や人間の営みを新たな視点から捉え、デジタル地球儀「SPHERE」などの企画に携わる。</p>
+        </div>
+      </article>
+      <div class="dialogue" aria-hidden="true"><span>対談</span></div>
+      <article class="person flip">
+        <figure class="photo"><img class="portrait" src="img/ogasahara.jpg" alt="小笠原治" width="480" height="480" loading="lazy"></figure>
+        <div class="txt">
+          <span class="view">テクノロジーの視点</span>
+          <h3>小笠原 治</h3>
+          <p class="en">Osamu Ogasahara</p>
+          <p class="role">さくらインターネット共同創業者／起業家</p>
+          <p class="bio">テクノロジーを社会につなぐ活動を展開し、スタートアップ支援や新たな技術の活用に取り組む。</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="band-sec" id="talk">
+    <div class="band">
+      <canvas id="globe-band" aria-hidden="true"></canvas>
+      <div class="band-inner">
+        <div class="label">TALK</div>
+        <h2>地球を「知る」ことから、何が始まるのか。</h2>
+        <p class="intro">地球の今を映し出すデジタル地球儀「SPHERE」。</p>
+        <div class="qs">
+          <div class="q"><small>問い</small><p>私たちは、テクノロジーによって地球をどこまで理解できるのだろうか。</p></div>
+          <div class="q"><small>問い</small><p>地球を可視化する技術は、私たちの認識や行動をどのように変えていくのか。</p></div>
+        </div>
+        <p class="close">文化人類学とテクノロジー、それぞれの視点からSPHEREの可能性を探ります。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="exhibition">
+    <div class="sec-head">
+      <div class="label">EXHIBITION</div>
+      <h2>展示</h2>
+    </div>
+    <div class="exhibit">
+      <div>
+        <h3>デジタル地球儀「SPHERE」展示</h3>
+        <div class="text">
+          <p>トークイベントに加え、デジタル地球儀「SPHERE」の展示を実施。</p>
+          <p>トークイベント開催時間外にも地球儀をご覧いただけます。</p>
+        </div>
+      </div>
+      <dl class="where">
+        <div><dt>展示期間</dt><dd>学園祭期間中</dd></div>
+        <div><dt>展示場所</dt><dd>カフェテリア横</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-top">
+      <div class="wordmark">Sphere Talk Event</div>
+      <span>2026.10.30 FRI 13:00–14:30</span>
+    </div>
+    <div class="foot-body">
+      <span><b>会場</b>　京都芸術大学 カフェテリア横</span>
+      <span><b>参加費</b>　無料</span>
+      <span><b>参加方法</b>　予約不要</span>
+      <span>京都芸術大学 学園祭関連企画</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var KY_LAT = 35.01, KY_LON = 135.77;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var dpr = 1;
+
+  function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  function rad(d) { return d * Math.PI / 180; }
+
+  function project(lat, lon, rot, tilt) {
+    var phi = rad(lat), lam = rad(lon - rot);
+    var x = Math.cos(phi) * Math.sin(lam), y = Math.sin(phi), z = Math.cos(phi) * Math.cos(lam);
+    return {
+      x: x,
+      y: y * Math.cos(tilt) - z * Math.sin(tilt),
+      z: y * Math.sin(tilt) + z * Math.cos(tilt)
+    };
+  }
+
+  function makeView(id) {
+    var cv = document.getElementById(id);
+    return { cv: cv, ctx: cv.getContext("2d"), size: 0 };
+  }
+  function resizeView(v) {
+    var r = v.cv.getBoundingClientRect();
+    v.size = Math.max(160, Math.round(r.width));
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    v.cv.width = v.size * dpr; v.cv.height = v.size * dpr;
+    v.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function line(c, points, rot, tilt, cx, cy, R, color, equator, k) {
+    var prev = null;
+    for (var i = 0; i < points.length; i++) {
+      var p = project(points[i][0], points[i][1], rot, tilt);
+      if (prev) {
+        var front = (p.z + prev.z) / 2 > 0;
+        c.globalAlpha = (front ? (equator ? .85 : .5) : .12) * k;
+        c.strokeStyle = color;
+        c.lineWidth = equator && front ? 1.4 : 1;
+        c.beginPath();
+        c.moveTo(cx + R * prev.x, cy - R * prev.y);
+        c.lineTo(cx + R * p.x, cy - R * p.y);
+        c.stroke();
+      }
+      prev = p;
+    }
+  }
+
+  function graticule(c, cx, cy, R, rot, tilt, color, k) {
+    var lat, lon, pts;
+    for (lon = -180; lon < 180; lon += 15) {
+      pts = [];
+      for (lat = -90; lat <= 90; lat += 3) pts.push([lat, lon]);
+      line(c, pts, rot, tilt, cx, cy, R, color, false, k);
+    }
+    for (lat = -75; lat <= 75; lat += 15) {
+      pts = [];
+      for (lon = -180; lon <= 180; lon += 3) pts.push([lat, lon]);
+      line(c, pts, rot, tilt, cx, cy, R, color, lat === 0, k);
+    }
+  }
+
+  /* hero globe */
+  var hero = makeView("globe");
+  var TILT = 0.5;
+  function drawHero(t) {
+    var c = hero.ctx, size = hero.size;
+    var globe = css("--globe"), accent = css("--accent"), muted = css("--muted"), fg = css("--fg");
+    var cx = size / 2, cy = size / 2, R = size * 0.38;
+    var rot = KY_LON + (reduce ? 0 : 26 * Math.sin(t / 5200));
+    c.clearRect(0, 0, size, size);
+
+    c.strokeStyle = muted; c.lineWidth = 1;
+    for (var k = 0; k < 120; k++) {
+      var a = k / 120 * Math.PI * 2, major = k % 10 === 0;
+      var r1 = R * 1.09, r2 = R * (major ? 1.2 : 1.14);
+      c.globalAlpha = major ? .8 : .4;
+      c.beginPath();
+      c.moveTo(cx + r1 * Math.cos(a), cy + r1 * Math.sin(a));
+      c.lineTo(cx + r2 * Math.cos(a), cy + r2 * Math.sin(a));
+      c.stroke();
+    }
+
+    c.globalAlpha = .09; c.fillStyle = globe;
+    c.beginPath(); c.arc(cx, cy, R, 0, Math.PI * 2); c.fill();
+    c.globalAlpha = 1; c.strokeStyle = globe; c.lineWidth = 1.6;
+    c.beginPath(); c.arc(cx, cy, R, 0, Math.PI * 2); c.stroke();
+
+    graticule(c, cx, cy, R, rot, TILT, globe, 1);
+
+    var k0 = project(KY_LAT, KY_LON, rot, TILT);
+    if (k0.z > 0) {
+      var kx = cx + R * k0.x, ky = cy - R * k0.y;
+      var pulse = reduce ? .5 : (t / 1800) % 1;
+      c.globalAlpha = 1 - pulse; c.strokeStyle = accent; c.lineWidth = 1.5;
+      c.beginPath(); c.arc(kx, ky, 5 + pulse * 22, 0, Math.PI * 2); c.stroke();
+      c.globalAlpha = 1; c.fillStyle = accent;
+      c.beginPath(); c.arc(kx, ky, 5, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = accent; c.lineWidth = 1;
+      c.beginPath(); c.moveTo(kx + 8, ky - 8); c.lineTo(kx + 30, ky - 30); c.lineTo(kx + 30 + size * .12, ky - 30); c.stroke();
+      c.fillStyle = fg;
+      c.font = "500 " + Math.max(10, size * .026) + "px " + css("--f-mono");
+      c.textBaseline = "bottom";
+      c.fillText("KYOTO", kx + 34, ky - 34);
+      c.fillStyle = muted;
+      c.font = "400 " + Math.max(9, size * .022) + "px " + css("--f-mono");
+      c.textBaseline = "top";
+      c.fillText("35.0°N 135.8°E", kx + 34, ky - 28);
+    }
+    c.globalAlpha = 1;
+  }
+
+  /* talk panel globe: static, quiet */
+  var band = makeView("globe-band");
+  function drawBand(t) {
+    var c = band.ctx, size = band.size, col = css("--band-fg");
+    var cx = size / 2, cy = size / 2, R = size * 0.46;
+    c.clearRect(0, 0, size, size);
+    c.globalAlpha = .35; c.strokeStyle = col; c.lineWidth = 1.4;
+    c.beginPath(); c.arc(cx, cy, R, 0, Math.PI * 2); c.stroke();
+    graticule(c, cx, cy, R, 18 + (reduce ? 0 : t * 0.003), 0.32, col, .4);
+    c.globalAlpha = 1;
+  }
+
+  var raf = 0;
+  var bandOn = false;
+  function frame(t) { drawHero(t); if (bandOn) drawBand(t); raf = requestAnimationFrame(frame); }
+  function start() {
+    cancelAnimationFrame(raf);
+    drawBand(0);
+    if (reduce) drawHero(0); else raf = requestAnimationFrame(frame);
+  }
+  function resizeAll() { resizeView(hero); resizeView(band); start(); }
+
+  resizeAll();
+  window.addEventListener("resize", resizeAll);
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) cancelAnimationFrame(raf); else start();
+  });
+  try {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", start);
+  } catch (e) {}
+  new MutationObserver(start).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(resizeAll);
+
+  /* talk panel globe turns only while it is on screen */
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) { bandOn = es[0].isIntersecting; }).observe(document.querySelector(".band"));
+  } else { bandOn = true; }
+
+  /* nav: smooth jump and current section */
+  var links = [].slice.call(document.querySelectorAll(".topbar nav a"));
+  links.forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      var el = document.getElementById(a.getAttribute("href").slice(1));
+      if (!el) return;
+      e.preventDefault();
+      el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    });
+  });
+  function setActive(id) {
+    links.forEach(function (a) {
+      if (a.getAttribute("href") === "#" + id) a.setAttribute("aria-current", "true");
+      else a.removeAttribute("aria-current");
+    });
+  }
+  if ("IntersectionObserver" in window) {
+    var so = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) setActive(e.target.id); });
+    }, { rootMargin: "-35% 0px -55% 0px" });
+    ["overview", "speakers", "talk", "exhibition"].forEach(function (id) { so.observe(document.getElementById(id)); });
+  }
+
+  /* calendar link and copy button */
+  var TITLE = "SPHERE TALK EVENT", PLACE = "京都芸術大学 カフェテリア横";
+  document.getElementById("cal").href =
+    "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+    "&text=" + encodeURIComponent(TITLE) +
+    "&dates=20261030T130000/20261030T143000&ctz=" + encodeURIComponent("Asia/Tokyo") +
+    "&location=" + encodeURIComponent(PLACE) +
+    "&details=" + encodeURIComponent("登壇：竹村眞一・小笠原治／参加無料・予約不要");
+  var INFO = [
+    TITLE,
+    "地球を可視化する技術は、私たちの世界の見方をどう変えるのか。",
+    "日時：2026年10月30日（金）13:00〜14:30",
+    "会場：" + PLACE,
+    "登壇：竹村眞一・小笠原治",
+    "参加費：無料（予約不要）"
+  ].join("\n");
+  var copyBtn = document.getElementById("copy"), timer = 0;
+  copyBtn.addEventListener("click", function () {
+    function done() {
+      copyBtn.textContent = "コピーしました";
+      clearTimeout(timer);
+      timer = setTimeout(function () { copyBtn.textContent = "開催情報をコピー"; }, 2000);
+    }
+    function fallback() {
+      var box = document.getElementById("copytext");
+      box.value = INFO;
+      document.getElementById("copyfallback").hidden = false;
+      box.focus(); box.select();
+    }
+    try {
+      navigator.clipboard.writeText(INFO).then(done, fallback);
+    } catch (e) { fallback(); }
+  });
+})();
+</script>
+</body>
+</html>
