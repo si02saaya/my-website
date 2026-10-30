@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>SPHERE TALK EVENT 2026</title>
+<title>SPHERE TALK EVENT</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
@@ -227,7 +227,7 @@ h2 {
 .q { padding: 20px 24px 0 0; }
 .q + .q { padding-left: 24px; border-left: 1px solid var(--band-line); }
 .q small { display: block; font-family: var(--f-mono); font-size: 11px; letter-spacing: .16em; color: var(--band-accent); margin-bottom: 6px; }
-.q p { font-weight: 500; line-height: 1.8; }
+.q p { font-family: var(--f-head); font-weight: 700; font-size: clamp(1.25rem, 2.4vw, 1.6rem); line-height: 1.6; text-wrap: balance; }
 .band .close { margin-top: 32px; color: var(--band-muted); }
 
 /* exhibition */
@@ -295,7 +295,7 @@ footer { margin-top: 104px; padding-top: 28px; border-top: 2px solid var(--fg); 
   </header>
 
   <dl class="facts">
-    <div class="fact"><dt>DATE</dt><dd>10/30<small>2026年10月30日（金）</small></dd></div>
+    <div class="fact"><dt>DATE</dt><dd>10/31<small>2026年10月31日（土）</small></dd></div>
     <div class="fact"><dt>TIME</dt><dd>13:00–14:30<small>90分</small></dd></div>
     <div class="fact"><dt>ENTRY</dt><dd>参加無料<small>予約不要</small></dd></div>
   </dl>
@@ -313,7 +313,7 @@ footer { margin-top: 104px; padding-top: 28px; border-top: 2px solid var(--fg); 
       </div>
       <dl class="spec">
         <div><dt>イベント名</dt><dd>SPHERE TALK EVENT</dd></div>
-        <div class="big"><dt>開催日</dt><dd>2026年10月30日（金）</dd></div>
+        <div class="big"><dt>開催日</dt><dd>2026年10月31日（土）</dd></div>
         <div class="big"><dt>開催時間</dt><dd>13:00〜14:30（90分）</dd></div>
         <div><dt>会場</dt><dd>京都芸術大学　カフェテリア横</dd></div>
         <div><dt>開催形式</dt><dd>トークイベント・対談</dd></div>
@@ -369,11 +369,11 @@ footer { margin-top: 104px; padding-top: 28px; border-top: 2px solid var(--fg); 
       <canvas id="globe-band" aria-hidden="true"></canvas>
       <div class="band-inner">
         <div class="label">TALK</div>
-        <h2>地球を「知る」ことから、何が始まるのか。</h2>
+        <h2>トークテーマ</h2>
         <p class="intro">地球の今を映し出すデジタル地球儀「SPHERE」。</p>
         <div class="qs">
-          <div class="q"><small>問い</small><p>私たちは、テクノロジーによって地球をどこまで理解できるのだろうか。</p></div>
-          <div class="q"><small>問い</small><p>地球を可視化する技術は、私たちの認識や行動をどのように変えていくのか。</p></div>
+          <div class="q"><small>THEME 1</small><p>AIが地球を理解する時代に、人間がすることはあるのか？</p></div>
+          <div class="q"><small>THEME 2</small><p>人口が変わる地球で、都市はどう変わるべきか？</p></div>
         </div>
         <p class="close">文化人類学とテクノロジー、それぞれの視点からSPHEREの可能性を探ります。</p>
       </div>
@@ -403,7 +403,7 @@ footer { margin-top: 104px; padding-top: 28px; border-top: 2px solid var(--fg); 
   <footer>
     <div class="foot-top">
       <div class="wordmark">Sphere Talk Event</div>
-      <span>2026.10.30 FRI 13:00–14:30</span>
+      <span>2026.10.31 SAT 13:00–14:30</span>
     </div>
     <div class="foot-body">
       <span><b>会場</b>　京都芸術大学 カフェテリア横</span>
@@ -593,13 +593,13 @@ footer { margin-top: 104px; padding-top: 28px; border-top: 2px solid var(--fg); 
   document.getElementById("cal").href =
     "https://calendar.google.com/calendar/render?action=TEMPLATE" +
     "&text=" + encodeURIComponent(TITLE) +
-    "&dates=20261030T130000/20261030T143000&ctz=" + encodeURIComponent("Asia/Tokyo") +
+    "&dates=20261031T130000/20261031T143000&ctz=" + encodeURIComponent("Asia/Tokyo") +
     "&location=" + encodeURIComponent(PLACE) +
     "&details=" + encodeURIComponent("登壇：竹村眞一・小笠原治／参加無料・予約不要");
   var INFO = [
     TITLE,
     "地球を可視化する技術は、私たちの世界の見方をどう変えるのか。",
-    "日時：2026年10月30日（金）13:00〜14:30",
+    "日時：2026年10月31日（土）13:00〜14:30",
     "会場：" + PLACE,
     "登壇：竹村眞一・小笠原治",
     "参加費：無料（予約不要）"
